@@ -44,7 +44,20 @@ func handleConn(lconn net.Conn) {
 
 	// Dial out to the server we are proxying to
 	log.Printf("Dialing out to remote %s", serverAddr)
-	rconn, err := tls.Dial("tcp", serverAddr, &tls.Config{})
+
+	// Load our certificate details
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+        MinVersion: tls.VersionSSL30,
+        MaxVersion: tls.VersionSSL30,
+	}
+
+	rconn, err := tls.Dial("tcp", serverAddr, c)
 	if err != nil {
 		log.Println(err)
 		return
