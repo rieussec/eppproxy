@@ -63,8 +63,12 @@ func handleConn(lconn net.Conn) {
 		return
 	}
 	defer rconn.Close()
-
-	log.Printf("Starting")
+    p, err := readEPPFrame(lconn)
+    if err != nil {
+        log.Println(err)
+        return
+    }
+    log.Printf("%s", p)
 
 	var wg sync.WaitGroup
 
