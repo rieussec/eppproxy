@@ -11,6 +11,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"bytes"
 )
 
 var (
@@ -18,6 +19,8 @@ var (
 	certFile   string
 	keyFile    string
 	serverAddr string
+	userName   string
+	password   string
 )
 
 func proxy(lconn, rconn net.Conn, wg *sync.WaitGroup) {
@@ -91,6 +94,8 @@ func readEPPFrame(conn net.Conn) ([]byte, error) {
 }
 
 func writeEPPFrame(w net.Conn, c []byte) {
+	c = bytes.Replace(c, []byte("{{user}}"), []byte(userName), 1)
+	c = bytes.Replace(c, []byte("{{password}}"), []byte(password), 1)
 	l := len(c) + 4
 	header := make([]byte, 4)
 	binary.BigEndian.PutUint32(header, uint32(l))
@@ -136,4 +141,6 @@ func init() {
 	flag.StringVar(&certFile, "cert", "./cert.pem", "the filename of the certificate to use")
 	flag.StringVar(&keyFile, "key", "./key.pem", "the filename of the key to use")
 	flag.StringVar(&serverAddr, "server", "", "the address and port of the server to proxy to")
+	flag.StringVar(&userName, "user", "", "the user to authenticate to")
+	flag.StringVar(&password, "password", "", "the password to authenticate the user")
 }
