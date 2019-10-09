@@ -64,6 +64,8 @@ func handleConn(lconn net.Conn) {
 	}
 	defer rconn.Close()
 
+	log.Printf("Starting")
+
 	var wg sync.WaitGroup
 
 	log.Printf("Starting proxy session between %s and %s", lconn.RemoteAddr(), rconn.RemoteAddr())
