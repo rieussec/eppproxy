@@ -116,6 +116,8 @@ func main() {
 
 	c := &tls.Config{
 		Certificates: []tls.Certificate{cert},
+        MinVersion: tls.VersionSSL30,
+        MaxVersion: tls.VersionSSL30,
 	}
 
 	// Listen for incoming connections
