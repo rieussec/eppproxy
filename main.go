@@ -59,6 +59,8 @@ func handleConn(lconn net.Conn) {
 
 	rconn, err := tls.Dial("tcp", serverAddr, c)
 	if err != nil {
+		log.Println("toto")
+
 		log.Println(err)
 		return
 	}
